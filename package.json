@@ -15,6 +15,14 @@
     "onCommand:copilot-toggle.toggle"
   ],
   "main": "./dist/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EricERodriguez/copilot-statusbar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EricERodriguez/copilot-statusbar/issues"
+  },
+  "homepage": "https://github.com/EricERodriguez/copilot-statusbar#readme",
   "contributes": {
     "commands": [
       {
