@@ -2,6 +2,7 @@
   "name": "copilot-statusbar",
   "displayName": "copilot-statusbar",
   "description": "Status bar button to enable/disable GitHub Copilot completions.",
+  "publisher": "synyster",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.104.0"
