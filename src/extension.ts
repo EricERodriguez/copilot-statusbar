@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
     item.text = enabled
       ? "$(octoface) Autocomplete: ON"
       : "$(octoface) Autocomplete: OFF";
-    item.tooltip = "Click para alternar Autocomplete";
+    item.tooltip = "Click to toggle autocomplete.";
     item.show();
   };
 
