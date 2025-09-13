@@ -23,6 +23,7 @@
     "url": "https://github.com/EricERodriguez/copilot-statusbar/issues"
   },
   "homepage": "https://github.com/EricERodriguez/copilot-statusbar#readme",
+  "license": "MIT",
   "contributes": {
     "commands": [
       {
