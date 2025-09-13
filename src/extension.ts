@@ -7,7 +7,6 @@ export function activate(context: vscode.ExtensionContext) {
   );
   item.command = "copilot-toggle.toggle";
   context.subscriptions.push(item);
-  vscode.window.showInformationMessage("Copilot Toggle: extensión activada");
 
   const updateLabel = async () => {
     // Intentamos leer el estado desde la configuración de Copilot
@@ -53,13 +52,6 @@ export function activate(context: vscode.ExtensionContext) {
       plaintext: !enabled,
       markdown: !enabled,
     };
-
-    // LOG para depuración
-    vscode.window.showInformationMessage(
-      `Copilot toggle\ncurrent: ${JSON.stringify(
-        current
-      )}\nenabled: ${enabled}\nnext: ${JSON.stringify(next)}`
-    );
 
     await cfg.update("enable", next, vscode.ConfigurationTarget.Global);
     await updateLabel();
