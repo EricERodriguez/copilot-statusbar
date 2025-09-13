@@ -1,15 +1,27 @@
-import * as assert from 'assert';
+import * as vscode from "vscode";
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-import * as vscode from 'vscode';
-// import * as myExtension from '../../extension';
+export function activate(ctx: vscode.ExtensionContext) {
+  vscode.window.showInformationMessage("Copilot Toggle: extensión activada");
 
-suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+  const item = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    10000
+  );
+  item.text = "$(octoface) Autocomplete: ON";
+  item.tooltip = "Click para alternar";
+  item.command = "copilot-toggle.toggle";
+  item.show();
+  ctx.subscriptions.push(item);
 
-	test('Sample test', () => {
-		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-	});
-});
+  const cmd = vscode.commands.registerCommand(
+    "copilot-toggle.toggle",
+    async () => {
+      vscode.window.showInformationMessage(
+        "Click en el botón de status bar recibido"
+      );
+    }
+  );
+  ctx.subscriptions.push(cmd);
+}
+
+export function deactivate() {}

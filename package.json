@@ -9,13 +9,16 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:copilot-toggle.toggle"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "copilot-statusbar.helloWorld",
-        "title": "Hello World"
+        "command": "copilot-toggle.toggle",
+        "title": "Copilot: Toggle Completions"
       }
     ]
   },

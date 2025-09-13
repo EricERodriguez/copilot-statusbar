@@ -7,6 +7,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
   item.command = "copilot-toggle.toggle";
   context.subscriptions.push(item);
+  vscode.window.showInformationMessage("Copilot Toggle: extensión activada");
 
   const updateLabel = async () => {
     // Intentamos leer el estado desde la configuración de Copilot
@@ -23,9 +24,9 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     item.text = enabled
-      ? "$(octoface) Copilot: ON"
-      : "$(octoface) Copilot: OFF";
-    item.tooltip = "Click para alternar Copilot completions";
+      ? "$(octoface) Autocomplete: ON"
+      : "$(octoface) Autocomplete: OFF";
+    item.tooltip = "Click para alternar Autocomplete";
     item.show();
   };
 
@@ -75,7 +76,9 @@ export function activate(context: vscode.ExtensionContext) {
   updateLabel();
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration("github.copilot.enable")) updateLabel();
+      if (e.affectsConfiguration("github.copilot.enable")) {
+        updateLabel();
+      }
     })
   );
 }
