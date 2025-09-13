@@ -13,14 +13,20 @@ export function activate(context: vscode.ExtensionContext) {
     // Intentamos leer el estado desde la configuración de Copilot
     const cfg = vscode.workspace.getConfiguration("github.copilot");
     const enableSetting = cfg.get<any>("enable");
-    let enabled = true;
+    let enabled = false;
 
-    // 'github.copilot.enable' puede ser boolean u objeto por lenguaje
+    // 'github.copilot.enable' puede ser boolean, objeto o undefined
     if (typeof enableSetting === "boolean") {
       enabled = enableSetting;
     } else if (enableSetting && typeof enableSetting === "object") {
-      // Heurística simple: si "*" está true, consideramos ON
-      enabled = enableSetting["*"] !== false;
+      // Si existe la clave '*', la usamos. Si no, consideramos OFF.
+      if (Object.prototype.hasOwnProperty.call(enableSetting, "*")) {
+        enabled = enableSetting["*"] === true;
+      } else {
+        enabled = false;
+      }
+    } else {
+      enabled = false;
     }
 
     item.text = enabled
@@ -31,38 +37,33 @@ export function activate(context: vscode.ExtensionContext) {
   };
 
   const toggle = async () => {
-    // 1) Preferimos el comando oficial de Copilot (si existe):
-    //    github.copilot.completions.toggle  (antes: github.copilot.toggleCopilot)
-    try {
-      const all = await vscode.commands.getCommands(true);
-      const cmd = all.includes("github.copilot.completions.toggle")
-        ? "github.copilot.completions.toggle"
-        : all.includes("github.copilot.toggleCopilot")
-        ? "github.copilot.toggleCopilot"
-        : null;
-
-      if (cmd) {
-        await vscode.commands.executeCommand(cmd);
-        // Le damos un respiro y refrescamos la etiqueta
-        setTimeout(updateLabel, 150);
-        return;
-      }
-    } catch {
-      // seguimos al plan B
-    }
-
-    // 2) Plan B: alternar el setting 'github.copilot.enable'
+    // Alternar '*' 'plaintext' y 'markdown' juntos
     const cfg = vscode.workspace.getConfiguration("github.copilot");
     const current = cfg.get<any>("enable");
-    let next: any;
-
+    // Siempre forzamos el objeto con los tres valores
+    let enabled = false;
     if (typeof current === "boolean") {
-      next = !current;
-    } else if (current && typeof current === "object") {
-      next = { ...current, "*": !(current["*"] === true) };
-    } else {
-      next = false; // si no hay nada, lo dejamos en OFF
+      enabled = current;
+    } else if (
+      current &&
+      typeof current === "object" &&
+      Object.prototype.hasOwnProperty.call(current, "*")
+    ) {
+      enabled = current["*"] === true;
     }
+
+    const next = {
+      "*": !enabled,
+      plaintext: !enabled,
+      markdown: !enabled,
+    };
+
+    // LOG para depuración
+    vscode.window.showInformationMessage(
+      `Copilot toggle\ncurrent: ${JSON.stringify(
+        current
+      )}\nenabled: ${enabled}\nnext: ${JSON.stringify(next)}`
+    );
 
     await cfg.update("enable", next, vscode.ConfigurationTarget.Global);
     await updateLabel();
