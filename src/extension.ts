@@ -44,11 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
     let enabled = false;
     if (typeof current === "boolean") {
       enabled = current;
-    } else if (
-      current &&
-      typeof current === "object" &&
-      Object.prototype.hasOwnProperty.call(current, "*")
-    ) {
+    } else if (isCopilotEnableObject(current)) {
       enabled = current["*"] === true;
     }
 
@@ -81,6 +77,12 @@ export function activate(context: vscode.ExtensionContext) {
         updateLabel();
       }
     })
+  );
+}
+
+function isCopilotEnableObject(current: any): current is Record<string, any> {
+  return (
+    current !== null && typeof current === "object" && !Array.isArray(current)
   );
 }
 
